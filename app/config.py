@@ -1,0 +1,2 @@
+EXPENSE_THRESHOLD = 100.0
+GEMINI_MODEL = "gemini-2.0-flash"
