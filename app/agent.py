@@ -1,10 +1,11 @@
 from __future__ import annotations
-import json, base64, os
+import json
+import base64
 from typing import Any
 from google.adk.agents import Agent
 from google.adk.apps import App
 from google.adk.models import Gemini
-from google.adk.workflow import Edge, Workflow, node
+from google.adk.workflow import Edge, Workflow, node, START
 from google.adk.events.event import Event
 from google.adk.agents.context import Context
 from app.config import EXPENSE_THRESHOLD, GEMINI_MODEL
@@ -91,10 +92,11 @@ def human_review(ctx: Context, node_input: Any):
     }
     yield Event(data=result, state={"outcome": result})
 
+
 root_agent = Workflow(
     name="expense_workflow",
     edges=[
-        Edge(from_node="START", to_node=parse_expense),
+        Edge(from_node=START, to_node=parse_expense),
         Edge(from_node=parse_expense, to_node=route_by_amount),
         Edge(from_node=route_by_amount, to_node=auto_approve, route="auto"),
         Edge(from_node=route_by_amount, to_node=llm_review, route="review"),
